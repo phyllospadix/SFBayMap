@@ -1,0 +1,21 @@
+site_name,site_code,site_type,site_type2,bay_perim_order,lat,long,notes
+SF Marina,SFMS,seawall,seawall,1,37.807244,-122.438944,
+Horseshoe Bay,HBR,riprap,riprap,2,37.833852,-122.476069,
+Dunphy Park,DPR,riprap,cobble,3,37.861372,-122.487564,"artificial, but more cobble-like"
+Brickyard Park,BPB,bench,bench,4,37.881823,-122.50356,
+RTC Beach,RTCC,cobble,cobble,5,37.888732,-122.445484,
+RTC Theater,RTCS,seawall,seawall,6,37.891512,-122.447081,
+RTC North Dock,RTCR,riprap,riprap,7,37.892866,-122.447704,
+Pt. Chauncey,PCW,blocks,blocks,8,37.894254,-122.449698,
+Pt. Chauncey Beach S ,PCC,cobble,cobble,9,37.894079,-122.450294,
+Pt. Chauncey Beach N,PCB,bench,bench,10,37.893957,-122.450961,
+Paradise Beach Park,PBS,seawall,seawall,11,37.893975,-122.456983,
+Paradise Cay,PCR,riprap,riprap,12,37.916335,-122.477833,
+San Quentin Beach,SQB,bench,bench,13,37.940679,-122.4832,
+Starkweather Park,SWR,riprap,riprap,14,37.946293,-122.483637,
+Pt. San Pablo,RRR,riprap,cobble,15,37.965049,-122.425005,"artificial, but more cobble-like"
+Pt. Orient N,POC,cobble,cobble,16,37.96165,-122.42738,
+Pt. Orient S,POB,bench,bench,17,37.961273,-122.427631,
+Pt. Molate,PMB,bench,bench,18,37.939322,-122.411061,
+Keller Beach,KBB,bench,bench,19,37.922568,-122.389068,
+Miller Knox,MKR,riprap,riprap,20,37.918916,-122.386726,

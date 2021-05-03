@@ -1,0 +1,234 @@
+---
+title: "SFBay Rocky Shore Study Site Map"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+author: "Karina J. Nielsen"
+date: "Last compiled on `r format(Sys.time(), '%d %B %Y')`"
+output:
+   bookdown::html_document2: default
+---
+
+
+```{r setup, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  fig.align = "left",
+  fig.width = 6,
+  fig.height = 4,
+  dev = "png",
+  cache = TRUE
+)
+
+
+# echo = FALSE means code will not print, by default
+#cache = TRUE saves output results of all chunks so that they do not need to be rerun
+
+```
+
+```{r library, include=FALSE}
+library("easypackages")
+my_packages <- c("renv", "easypackages",  "here", "ggthemes", "gridExtra", "tidyverse", "lubridate", "patchwork", "tinytex", "bookdown", "ggpubr", "wesanderson", "pals", "ggridges", "hrbrthemes", "viridis", "ggrepel", "data.table")
+libraries(my_packages)
+
+# Install packages if needed
+#install.packages("easypacakges")
+# packages(my_packages) 
+
+# checks to make sure the packages needed are loaded and asks before installing to confirm install in the console window
+# Install the relevant libraries - do this one time
+
+```
+
+```{r renv, include=FALSE}
+#Track/maintain package versions in workflow
+
+# renv::init # to initialize a new project-local environment with a private R library
+# run as needed later in the project to capture required package versions
+
+# renv::snapshot() 
+
+# NB must respond and affirm actions in console or you will see the spinning wheel....
+# reference for renv workflow: https://rstudio.github.io/renv/articles/renv.html
+
+```
+
+```{r functions}
+
+#As needed...
+
+```
+
+```{r here, include=FALSE}
+
+## Confirm working directory for project
+here::here() # use this to work with sub-directories less awkwardly and share projects across users/machines more easily.
+```
+
+```{r}
+# following tutorial here: https://www.littlemissdata.com/blog/maps
+
+#  API key created // Use this key in your application by passing it with the key=API_KEY parameter
+#  AIzaSyA-2uPuG1Jp1VdShgPKDjdXkyA74zgvoss
+
+# Get the latest Install of ggmaps
+# if(!requireNamespace("devtools")) install.packages("devtools")
+# devtools::install_github("dkahle/ggmap", ref = "tidyup", force=TRUE)
+# install("ggmap") # added this after error installing using code above
+
+# Load the library
+# library("ggmap")
+
+
+```
+
+```{r}
+
+#Set your API Key
+ggmap::register_google(key = "AIzaSyA-2uPuG1Jp1VdShgPKDjdXkyA74zgvoss")
+```
+
+```{r}
+sites <- read_csv(here::here ("data","sfbay_rockweed_site_names_locations.csv"), col_names = TRUE) 
+```
+
+
+```{r}
+# Create a map with all of the sites plotted.
+options(ggrepel.max.overlaps = Inf)
+all <-
+  ggmap(
+    get_map(
+      location = c(lon = -122.43448569306662, lat = 37.88189695628280),
+      source = "google",
+      zoom = 11,
+      scale = 2 ,
+      size = c(640, 640),
+      format = "png8",
+      maptype = 'satellite',
+      color = 'color'
+    )
+  )
+all2 <- all + geom_point(aes(x = long, y = lat, color = site_name),
+                 data = sites,
+                 size = 3,
+                 shape = 21,
+                 stroke = 1) +
+    theme(legend.position = "bottom")+
+  guides(col = guide_legend(ncol = 3))
+
+all3 <- all + geom_point(aes(x = long, y = lat, color = site_type),
+                 data = sites,
+                 size = 3,
+                 shape = 21,
+                 stroke = 1) +
+    theme(legend.position = "bottom")+
+  guides(col = guide_legend(ncol = 3))
+  
+  
+  # geom_label_repel(
+  #   aes(x = long, y = lat, label = bay_perim_order),
+  #   data = sites,
+  #   family = 'Arial',
+  #   size = 2,
+  #   box.padding = 0.1,
+  #   point.padding = 0.5,
+  #   segment.color = 'grey50'
+  # )
+
+
+```
+
+```{r}
+all2
+ggsave("all2.pdf", width = 7.5, height = 10, units = "in")
+```
+
+```{r}
+all3
+ggsave("all3.pdf", width = 7.5, height = 10, units = "in")
+```
+
+```{r}
+
+
+```
+
+```{r}
+# Create a map zoomed in for Tiburon sites .
+options(ggrepel.max.overlaps = Inf)
+rtc <-
+  ggmap(
+    get_map(
+      location = c(lon = -122.45238139343634, lat = 37.89121120657544),
+      source = "google",
+      zoom = 15,
+      scale = 1 ,
+      size = c(640, 640),
+      format = "png8",
+      maptype = 'satellite',
+      color = 'color'
+     
+    )
+  )
+rtc2 <- rtc + geom_point(aes(x = long, y = lat, color = site_type2),
+                         data = sites,
+                         size = 1) +
+  theme(legend.position = "none") 
+ 
+  # +
+  # geom_label_repel(
+  #   aes(x = long, y = lat, label = bay_perim_order),
+  #   data = sites,
+  #   size = 2,
+  #   box.padding = 0.2,
+  #   point.padding = 0.3,
+  #   segment.color = 'grey50'
+  # ) 
+```
+
+
+```{r}
+# Create a map zoomed in for pt san pedro sites .
+options(ggrepel.max.overlaps = Inf)
+psp <-
+  ggmap(
+    get_map(
+      location = c(lon = -122.419722815432, lat = 37.948391793287286),
+      source = "google",
+      zoom = 13,
+      scale = 2 ,
+      size = c(640, 640),
+      format = "png8",
+      maptype = 'satellite',
+      color = 'color'
+     
+    )
+  )
+psp2 <- psp + geom_point(aes(x = long, y = lat, color = site_type2),
+                         data = sites,
+                         size = 1) +
+  theme(legend.position = "none") 
+   
+  # +
+  # geom_label_repel(
+  #   aes(x=long, y=lat, label = bay_perim_order),
+  #   data = sites,
+  #   family = 'Times',
+  #   size = 3,
+  #   box.padding = 0.2,
+  #   point.padding = 0.3,
+  #   segment.color = 'grey50'
+  # ) 
+```
+
+
+```{r}
+(all2| (psp2/rtc2)) +
+  plot_annotation(title = "Study sites")
+```
+
+
+
