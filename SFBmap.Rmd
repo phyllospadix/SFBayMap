@@ -93,6 +93,7 @@ here::here() # use this to work with sub-directories less awkwardly and share pr
 ```{r}
 sites <- read_csv(here::here ("data","sfbay_rockweed_site_names_locations.csv"), col_names = TRUE)
 rtcsites <- sites[ which(sites$group=='rtc'), ]
+pspsites <- sites[ which(sites$group=='psp'), ]
 ```
 
 
@@ -153,11 +154,6 @@ ggsave("all3.pdf", width = 7.5, height = 10, units = "in")
 ```
 
 ```{r}
-
-
-```
-
-```{r}
 # Create a map zoomed in for Tiburon sites .
 
 options(ggrepel.max.overlaps = Inf)
@@ -204,9 +200,9 @@ rtc2
 ggsave("rtc2.pdf", width = 7.5, height = 10, units = "in")
 ```
 
-
 ```{r}
-# Create a map zoomed in for pt san pedro sites .
+# Create a map zoomed in for pt san pedro sites
+
 options(ggrepel.max.overlaps = Inf)
 psp <-
   ggmap(
@@ -219,24 +215,30 @@ psp <-
       format = "png8",
       maptype = 'satellite',
       color = 'color'
-     
     )
   )
-psp2 <- psp + geom_point(aes(x = long, y = lat, color = site_type2),
-                         data = sites,
-                         size = 1) +
-  theme(legend.position = "none") 
-   
-  # +
-  # geom_label_repel(
-  #   aes(x=long, y=lat, label = bay_perim_order),
-  #   data = sites,
-  #   family = 'Times',
-  #   size = 3,
-  #   box.padding = 0.2,
-  #   point.padding = 0.3,
-  #   segment.color = 'grey50'
-  # ) 
+
+psp2 <- psp + geom_point(aes(x = long, y = lat, color = site_type),
+                 data = pspsites,
+                 size = 3,
+                 shape = 21,
+                 stroke = 1) +
+    theme(legend.position = "bottom")+
+  guides(col = guide_legend(ncol = 3))+
+  geom_label_repel(
+    aes(x = long, y = lat, label = site_name),
+    data = pspsites,
+    size = 2,
+    box.padding = 0.2,
+    point.padding = 0.3,
+    segment.color = 'black'
+  )
+
+```
+
+```{r}
+psp2
+ggsave("psp2.pdf", width = 7.5, height = 10, units = "in")
 ```
 
 
