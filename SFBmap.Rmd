@@ -71,7 +71,7 @@ here::here() # use this to work with sub-directories less awkwardly and share pr
 # following tutorial here: https://www.littlemissdata.com/blog/maps
 
 #  API key created // Use this key in your application by passing it with the key=API_KEY parameter
-#  AIzaSyA-2uPuG1Jp1VdShgPKDjdXkyA74zgvoss
+
 
 # Get the latest Install of ggmaps
 # if(!requireNamespace("devtools")) install.packages("devtools")
