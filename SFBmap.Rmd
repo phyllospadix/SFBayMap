@@ -86,12 +86,13 @@ here::here() # use this to work with sub-directories less awkwardly and share pr
 
 ```{r}
 
-#Set your API Key
+#Set your API Key # use console to keep API key private
 #ggmap::register_google(key = "KEY_HERE")
 ```
 
 ```{r}
-sites <- read_csv(here::here ("data","sfbay_rockweed_site_names_locations.csv"), col_names = TRUE) 
+sites <- read_csv(here::here ("data","sfbay_rockweed_site_names_locations.csv"), col_names = TRUE)
+rtcsites <- sites[ which(sites$group=='rtc'), ]
 ```
 
 
@@ -163,9 +164,9 @@ options(ggrepel.max.overlaps = Inf)
 rtc <-
   ggmap(
     get_map(
-      location = c(lon = -122.45238139343634, lat = 37.89121120657544),
+      location = c(lon = -122.47121817785745, lat = 37.91352394528543),
       source = "google",
-      zoom = 11,
+      zoom = 13,
       scale = 2 ,
       size = c(640, 640),
       format = "png8",
@@ -173,32 +174,30 @@ rtc <-
       color = 'color'
     )
   )
-rtc2 <- all + geom_point(aes(x = long, y = lat, color = site_name),
-                 data = sites,
-                 size = 3,
-                 shape = 21,
-                 stroke = 1) +
-    theme(legend.position = "bottom")+
-  guides(col = guide_legend(ncol = 3))
 
-rtc3 <- all + geom_point(aes(x = long, y = lat, color = site_type),
-                 data = sites,
+rtc2 <- rtc + geom_point(aes(x = long, y = lat, color = site_type),
+                 data = rtcsites,
                  size = 3,
                  shape = 21,
                  stroke = 1) +
     theme(legend.position = "bottom")+
-  guides(col = guide_legend(ncol = 3))
-  
- 
-  # +
-  # geom_label_repel(
-  #   aes(x = long, y = lat, label = bay_perim_order),
-  #   data = sites,
-  #   size = 2,
-  #   box.padding = 0.2,
-  #   point.padding = 0.3,
-  #   segment.color = 'grey50'
-  # ) 
+  guides(col = guide_legend(ncol = 3))+
+  geom_label_repel(
+    aes(x = long, y = lat, label = site_name),
+    data = rtcsites,
+    size = 2,
+    box.padding = 0.2,
+    point.padding = 0.3,
+    segment.color = 'black'
+  )
+
+# rtc3 <- rtc + geom_point(aes(x = long, y = lat, color = site_type),
+#                  data = rtcsites,
+#                  size = 3,
+#                  shape = 21,
+#                  stroke = 1) +
+#     theme(legend.position = "bottom")+
+#   guides(col = guide_legend(ncol = 3)) 
 ```
 ```{r}
 rtc2
