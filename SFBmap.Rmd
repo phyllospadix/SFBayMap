@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 
 ```{r library, include=FALSE}
 library("easypackages")
-my_packages <- c("renv", "easypackages",  "here", "ggthemes", "gridExtra", "tidyverse", "lubridate", "patchwork", "tinytex", "bookdown", "ggpubr", "wesanderson", "pals", "ggridges", "hrbrthemes", "viridis", "ggrepel", "data.table")
+my_packages <- c("renv", "easypackages",  "here", "ggthemes", "gridExtra", "tidyverse", "lubridate", "patchwork", "tinytex", "bookdown", "ggpubr", "wesanderson", "pals", "ggridges", "hrbrthemes", "viridis", "ggrepel", "data.table", "ggmap")
 libraries(my_packages)
 
 # Install packages if needed
@@ -45,10 +45,10 @@ libraries(my_packages)
 ```{r renv, include=FALSE}
 #Track/maintain package versions in workflow
 
-# renv::init # to initialize a new project-local environment with a private R library
+renv::init # to initialize a new project-local environment with a private R library
 # run as needed later in the project to capture required package versions
 
-# renv::snapshot() 
+renv::snapshot() 
 
 # NB must respond and affirm actions in console or you will see the spinning wheel....
 # reference for renv workflow: https://rstudio.github.io/renv/articles/renv.html
@@ -87,7 +87,7 @@ here::here() # use this to work with sub-directories less awkwardly and share pr
 ```{r}
 
 #Set your API Key
-ggmap::register_google(key = "AIzaSyA-2uPuG1Jp1VdShgPKDjdXkyA74zgvoss")
+#ggmap::register_google(key = "KEY_HERE")
 ```
 
 ```{r}
@@ -158,25 +158,37 @@ ggsave("all3.pdf", width = 7.5, height = 10, units = "in")
 
 ```{r}
 # Create a map zoomed in for Tiburon sites .
+
 options(ggrepel.max.overlaps = Inf)
 rtc <-
   ggmap(
     get_map(
       location = c(lon = -122.45238139343634, lat = 37.89121120657544),
       source = "google",
-      zoom = 15,
-      scale = 1 ,
+      zoom = 11,
+      scale = 2 ,
       size = c(640, 640),
       format = "png8",
       maptype = 'satellite',
       color = 'color'
-     
     )
   )
-rtc2 <- rtc + geom_point(aes(x = long, y = lat, color = site_type2),
-                         data = sites,
-                         size = 1) +
-  theme(legend.position = "none") 
+rtc2 <- all + geom_point(aes(x = long, y = lat, color = site_name),
+                 data = sites,
+                 size = 3,
+                 shape = 21,
+                 stroke = 1) +
+    theme(legend.position = "bottom")+
+  guides(col = guide_legend(ncol = 3))
+
+rtc3 <- all + geom_point(aes(x = long, y = lat, color = site_type),
+                 data = sites,
+                 size = 3,
+                 shape = 21,
+                 stroke = 1) +
+    theme(legend.position = "bottom")+
+  guides(col = guide_legend(ncol = 3))
+  
  
   # +
   # geom_label_repel(
@@ -187,6 +199,10 @@ rtc2 <- rtc + geom_point(aes(x = long, y = lat, color = site_type2),
   #   point.padding = 0.3,
   #   segment.color = 'grey50'
   # ) 
+```
+```{r}
+rtc2
+ggsave("rtc2.pdf", width = 7.5, height = 10, units = "in")
 ```
 
 
