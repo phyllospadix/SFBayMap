@@ -113,15 +113,15 @@ all <-
       color = 'color'
     )
   )
-all2 <- all + geom_point(aes(x = long, y = lat, color = site_name),
+all2 <- all + geom_point(aes(x = long, y = lat),
                  data = sites,
-                 size = 3,
+                 size = 2,
                  shape = 21,
+                 color = 'light blue',
                  stroke = 1) +
-    theme(legend.position = "bottom")+
-  guides(col = guide_legend(ncol = 3))
+    theme(legend.position = "none")
 
-all3 <- all + geom_point(aes(x = long, y = lat, color = site_type),
+all3 <- all + geom_point(aes(x = long, y = lat, color = "site_type"),
                  data = sites,
                  size = 3,
                  shape = 21,
