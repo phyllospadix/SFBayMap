@@ -1,4 +1,4 @@
-site_name,site_code,site_type,site_type2,group,group2,bay_perim_order,lat,long,notes
+site_name,site_code,site_type_orig,site_type,group,group2,bay_perim_order,lat,long,notes
 SF Marina,SFMS,seawall,seawall,sfb,ggb,1,37.807244,-122.438944,
 Horseshoe Bay,HBR,riprap,riprap,sfb,ggb,2,37.833852,-122.476069,
 Dunphy Park,DPR,riprap,cobble,sfb,ggb,3,37.861372,-122.487564,"artificial, but more cobble-like"

@@ -11,20 +11,18 @@ output:
    bookdown::html_document2: default
 ---
 
-
 ```{r setup, include=FALSE, cache=FALSE}
 knitr::opts_chunk$set(
   echo = FALSE,
   fig.align = "left",
-  fig.width = 6,
-  fig.height = 4,
+  fig.width = 7,
+  fig.height = 7,
   dev = "png",
   cache = TRUE
 )
 
-
 # echo = FALSE means code will not print, by default
-#cache = TRUE saves output results of all chunks so that they do not need to be rerun
+# cache = TRUE saves output results of all chunks so that they do not need to be rerun
 
 ```
 
@@ -45,7 +43,7 @@ libraries(my_packages)
 ```{r renv, include=FALSE}
 #Track/maintain package versions in workflow
 
-renv::init # to initialize a new project-local environment with a private R library
+# renv::init # to initialize a new project-local environment with a private R library
 # run as needed later in the project to capture required package versions
 
 renv::snapshot() 
@@ -55,7 +53,7 @@ renv::snapshot()
 
 ```
 
-```{r functions}
+```{r functions, include=FALSE}
 
 #As needed...
 
@@ -67,39 +65,31 @@ renv::snapshot()
 here::here() # use this to work with sub-directories less awkwardly and share projects across users/machines more easily.
 ```
 
-```{r}
+```{r map-notes, include = FALSE}
 # following tutorial here: https://www.littlemissdata.com/blog/maps
 
 #  API key created // Use this key in your application by passing it with the key=API_KEY parameter
-
-
-# Get the latest Install of ggmaps
-# if(!requireNamespace("devtools")) install.packages("devtools")
-# devtools::install_github("dkahle/ggmap", ref = "tidyup", force=TRUE)
-# install("ggmap") # added this after error installing using code above
-
-# Load the library
-# library("ggmap")
-
-
 ```
 
-```{r}
+```{r set API key,include = FALSE}
 
-#Set your API Key # use console to keep API key private
+#Set your API Key # use console to keep API key private # key in text file
 #ggmap::register_google(key = "KEY_HERE")
 ```
 
-```{r}
+```{r read in data files, include = FALSE}
 sites <- read_csv(here::here ("data","sfbay_rockweed_site_names_locations.csv"), col_names = TRUE)
 rtcsites <- sites[ which(sites$group=='rtc'), ]
 pspsites <- sites[ which(sites$group=='psp'), ]
+tibsites <- sites[ which(sites$group2=='tib'), ]
+ggbsites <- sites[ which(sites$group2=='ggb'), ]
 ```
 
 
-```{r}
+```{r site-maps, fig.cap = "Map of study sites in central and northern San Francsico Bay.", fig.width = 7, fig.height = 7, message=FALSE}
+
 # Create a map with all of the sites plotted.
-options(ggrepel.max.overlaps = Inf)
+
 all <-
   ggmap(
     get_map(
@@ -113,6 +103,7 @@ all <-
       color = 'color'
     )
   )
+
 all2 <- all + geom_point(aes(x = long, y = lat),
                  data = sites,
                  size = 2,
@@ -121,7 +112,11 @@ all2 <- all + geom_point(aes(x = long, y = lat),
                  stroke = 1) +
     theme(legend.position = "none")
 
-all3 <- all + geom_point(aes(x = long, y = lat, color = "site_type"),
+all2
+
+# Create a map with all of the sites plotted and coded by site type.
+
+all3 <- all + geom_point(aes(x = long, y = lat, color = site_type),
                  data = sites,
                  size = 3,
                  shape = 21,
@@ -129,34 +124,21 @@ all3 <- all + geom_point(aes(x = long, y = lat, color = "site_type"),
     theme(legend.position = "bottom")+
   guides(col = guide_legend(ncol = 3))
   
-  
-  # geom_label_repel(
-  #   aes(x = long, y = lat, label = bay_perim_order),
-  #   data = sites,
-  #   family = 'Arial',
-  #   size = 2,
-  #   box.padding = 0.1,
-  #   point.padding = 0.5,
-  #   segment.color = 'grey50'
-  # )
-
-
 ```
 
-```{r}
+```{r map-all save, include=FALSE}
 all2
 ggsave("all2.pdf", width = 7.5, height = 10, units = "in")
 ```
 
-```{r}
+```{r map-all-type save, include=FALSE}
 all3
 ggsave("all3.pdf", width = 7.5, height = 10, units = "in")
 ```
 
-```{r}
-# Create a map zoomed in for Tiburon sites .
+```{r rtc-map, message=FALSE, warning=FALSE, fig.cap= " Reference sites used to inform restoration planning and design.", fig.width = 7, fig.height = 7}
+# Create a map zoomed in for RTC ref sites .
 
-options(ggrepel.max.overlaps = Inf)
 rtc <-
   ggmap(
     get_map(
@@ -177,7 +159,7 @@ rtc2 <- rtc + geom_point(aes(x = long, y = lat, color = site_type),
                  shape = 21,
                  stroke = 1) +
     theme(legend.position = "bottom")+
-  guides(col = guide_legend(ncol = 3))+
+  guides(col = guide_legend(nrow = 1))+
   geom_label_repel(
     aes(x = long, y = lat, label = site_name),
     data = rtcsites,
@@ -187,27 +169,66 @@ rtc2 <- rtc + geom_point(aes(x = long, y = lat, color = site_type),
     segment.color = 'black'
   )
 
-# rtc3 <- rtc + geom_point(aes(x = long, y = lat, color = site_type),
-#                  data = rtcsites,
-#                  size = 3,
-#                  shape = 21,
-#                  stroke = 1) +
-#     theme(legend.position = "bottom")+
-#   guides(col = guide_legend(ncol = 3)) 
+rtc2
 ```
-```{r}
+
+```{r rtc-map save, include=FALSE}
 rtc2
 ggsave("rtc2.pdf", width = 7.5, height = 10, units = "in")
 ```
 
-```{r}
-# Create a map zoomed in for pt san pedro sites
+
+```{r tib-map, message=FALSE, warning=FALSE, fig.cap= "Map of central San Francsicso Bay study sites by type in region 2.", , fig.width = 7, fig.height = 7}
+# Create a map zoomed in for Tiburon sites .
 
 options(ggrepel.max.overlaps = Inf)
+tib <-
+  ggmap(
+    get_map(
+      location = c(lon = -122.47121817785745, lat = 37.91352394528543),
+      source = "google",
+      zoom = 12,
+      scale = 2 ,
+      size = c(640, 640),
+      format = "png8",
+      maptype = 'satellite',
+      color = 'color'
+    )
+  )
+
+tib2 <- tib + geom_point(aes(x = long, y = lat, color = site_type),
+                 data = tibsites,
+                 size = 3,
+                 shape = 21,
+                 stroke = 1) +
+    theme(legend.position = "bottom")+
+  guides(col = guide_legend(nrow = 1))+
+  geom_label_repel(
+    aes(x = long, y = lat, label = site_name),
+    data = tibsites,
+    size = 2,
+    box.padding = 0.2,
+    point.padding = 0.3,
+    segment.color = 'black'
+  )
+
+tib2
+
+```
+
+```{r tib-map save, include=FALSE}
+tib2
+ggsave("tib2.pdf", width = 7.5, height = 10, units = "in")
+```
+
+
+```{r psp-map, message=FALSE, warning=FALSE, fig.cap= "Map of central San Francsicso Bay study sites by type in region 3.", , fig.width = 7, fig.height = 7}
+# Create a map zoomed in for pt san pedro sites
+
 psp <-
   ggmap(
     get_map(
-      location = c(lon = -122.419722815432, lat = 37.948391793287286),
+      location = c(lon = -122.39946372242072, lat = 37.940875791830365),
       source = "google",
       zoom = 13,
       scale = 2 ,
@@ -224,7 +245,7 @@ psp2 <- psp + geom_point(aes(x = long, y = lat, color = site_type),
                  shape = 21,
                  stroke = 1) +
     theme(legend.position = "bottom")+
-  guides(col = guide_legend(ncol = 3))+
+  guides(col = guide_legend(nrow = 1))+
   geom_label_repel(
     aes(x = long, y = lat, label = site_name),
     data = pspsites,
@@ -234,18 +255,57 @@ psp2 <- psp + geom_point(aes(x = long, y = lat, color = site_type),
     segment.color = 'black'
   )
 
+psp2
+
 ```
 
-```{r}
+```{r psp-map save, include=FALSE}
 psp2
 ggsave("psp2.pdf", width = 7.5, height = 10, units = "in")
 ```
 
+```{r ggb-map, message=FALSE, warning=FALSE, fig.cap = "Map of central San Francsicso Bay study sites by type in region 1.", fig.width = 7, fig.height = 7}
+# Create a map zoomed in for gate + richardson bay sites
 
-```{r}
-(all2| (psp2/rtc2)) +
-  plot_annotation(title = "Study sites")
+ggb <-
+  ggmap(
+    get_map(
+      location = c(lon = -122.47499472820377, lat = 37.84184640221922),  
+      source = "google",
+      zoom = 12,
+      scale = 2 ,
+      size = c(640, 640),
+      format = "png8",
+      maptype = 'satellite',
+      color = 'color'
+    )
+  )
+
+ggb2 <- ggb + geom_point(aes(x = long, y = lat, color = site_type),
+                 data = ggbsites,
+                 size = 3,
+                 shape = 21,
+                 stroke = 1) +
+    theme(legend.position = "bottom")+
+  guides(col = guide_legend(nrow = 1))+
+  geom_label_repel(
+    aes(x = long, y = lat, label = site_name),
+    data = ggbsites,
+    size = 2,
+    box.padding = 0.2,
+    point.padding = 0.3,
+    segment.color = 'black'
+  )
+
+ggb2
+
 ```
+```{r ggb-map save, include=FALSE}
+ggb2
+ggsave("ggb2.pdf", width = 7.5, height = 10, units = "in")
+```
+
+
 
 
 
